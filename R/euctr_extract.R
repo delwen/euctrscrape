@@ -160,14 +160,14 @@ extract_all <- function (trn) {
   
   # Store in results dataframe
   result <- data.frame(
-    euctr_id=character(),
-    title=character(),
-    date=character()
+    euctr_id = character(),
+    title = character(),
+    reg_date = character()
   ) %>%
     add_row(
       euctr_id = trn,
       title = full_title,
-      date = date
+      reg_date = date
     )
   
   # Get any additional identifiers
@@ -175,10 +175,10 @@ extract_all <- function (trn) {
   
   # Store in separate dataframe
   found_ids <- data.frame(
-    euctr_id=character(),
-    other_id=character(),
-    field=character(),
-    provenance=character()
+    euctr_id = character(),
+    other_id = character(),
+    field = character(),
+    provenance = character()
   )
   
   found_ids <- found_ids %>%
@@ -225,7 +225,7 @@ combine_info <- function(trials) {
   table_other <- data.frame(
     euctr_id = character(),
     title = character(),
-    date = character()
+    reg_date = character()
   )
   
   table_identifiers <- data.frame(
@@ -238,7 +238,7 @@ combine_info <- function(trials) {
   final_table <- data.frame(
     euctr_id = character(),
     title = character(),
-    date = character(),
+    reg_date = character(),
     other_id = character(),
     field = character(),
     provenance = character()
