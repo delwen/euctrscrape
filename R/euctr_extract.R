@@ -47,7 +47,6 @@ extract_identifiers <- function(lines) {
       
       if (!is.na(ctg_identifier)) {
         print("More than one NCT identifier found!")
-        print(trn)
         break
       }
       
@@ -62,7 +61,6 @@ extract_identifiers <- function(lines) {
     index <- which(lines == "A.5.4 Other Identifiers:")
     if (length(index) > 1) {
       print("More than one other identifier found!")
-      print(trn)
       index <- index[1]
     }
     other_identifier <- lines[index + 1]
@@ -254,7 +252,10 @@ combine_info <- function(trials) {
     res_identifiers <- res[[2]]
     table_identifiers <- rbind(table_identifiers, res_identifiers)
     
-    final_table <- full_join(table_other, table_identifiers, by = "euctr_id")
+    final_table <- full_join(table_other,
+                             table_identifiers,
+                             by = "euctr_id",
+                             multiple = "all")
   }
   return(final_table)
 }
