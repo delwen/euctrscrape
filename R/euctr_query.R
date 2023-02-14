@@ -13,7 +13,6 @@ source(here("R", "euctr_extract.R"))
 data <- read_csv(here("data", "2022-12-03_charite-euctr-trials.csv"))
 
 trials <- data %>%
-  slice(1:5) %>%
   pull(id)
 
 results <- combine_info(trials)
