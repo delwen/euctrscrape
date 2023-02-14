@@ -4,5 +4,8 @@
 .Rdata
 euctrscrape.Rproj
 
+# cache
+cache/
+
 # macOS
 .DS_Store
