@@ -17,4 +17,4 @@ trials <- data %>%
 
 results <- combine_info(trials)
 
-write_csv(results, here("data", "2023-02-14_charite-ids.csv"))
+write_csv(results, here("data", "2023-03-27_charite-ids.csv"))

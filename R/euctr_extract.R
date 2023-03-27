@@ -2,15 +2,25 @@
 
 extract_title <- function(lines) {
   
+  result <- NA
+  
   for (line in lines) {
-    m <- str_match(line,"A\\.3 Full title of the trial:(.+)")
     
-    if(!is.na(m[2])){
-      return(m[2])
+    if (is.na(result)) {
+      
+      m <- str_match(line, "A\\.3 Full title of the trial:(.+)")
+      
+      if (!is.na(m[2])) {
+        result <- str_squish(m[2])
+      }
+    } else if (line == "" || startsWith(line, "A.") || startsWith(line, "B.")) {
+      break
+    } else {
+      result <- paste(result, str_squish(line))
     }
   }
   
-  return(NA)
+  return(result)
 }
 
 
