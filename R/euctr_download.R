@@ -62,8 +62,10 @@ euctr_download_protocol <- function (trn) {
   )
   
   path <- euctr_download_url(url, new_name)
-  
-  # TODO: handle NA
+
+  if (is.na(path)) {
+    return(NA)
+  }
   
   return(readLines(path))
 }
