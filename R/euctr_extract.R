@@ -428,20 +428,20 @@ combine_info <- function(trials) {
     provenance = character()
   )
   
-  final_table <- data.frame(
-    euctr_id = character(),
-    title = character(),
-    member_state = character(),
-    trial_status = character(),
-    sponsor_name = character(),
-    sponsor_status = character(),
-    sponsor_country = character(),
-    funder = character(),
-    reg_date = character(),
-    other_id = character(),
-    field = character(),
-    provenance = character()
-  )
+  # final_table <- data.frame(
+  #   euctr_id = character(),
+  #   title = character(),
+  #   member_state = character(),
+  #   trial_status = character(),
+  #   sponsor_name = character(),
+  #   sponsor_status = character(),
+  #   sponsor_country = character(),
+  #   funder = character(),
+  #   reg_date = character(),
+  #   other_id = character(),
+  #   field = character(),
+  #   provenance = character()
+  # )
   
   unresolved <- data.frame(
     unresolved_id = character()
@@ -467,10 +467,10 @@ combine_info <- function(trials) {
     res_identifiers <- res[[2]]
     table_identifiers <- rbind(table_identifiers, res_identifiers)
     
-    final_table <- full_join(table_other,
-                             table_identifiers,
-                             by = "euctr_id",
-                             multiple = "all")
+    # final_table <- full_join(table_other,
+    #                          table_identifiers,
+    #                          by = "euctr_id",
+    #                          multiple = "all")
   }
-  return(list(final_table, unresolved))
+  return(list(table_other, table_identifiers, unresolved))
 }

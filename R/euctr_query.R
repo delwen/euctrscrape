@@ -18,10 +18,14 @@ trials <- data %>%
 
 results <- combine_info(trials)
 
-# Create dataframe of final results table with all the extracted fields
+# Create dataframe of fields from the EUCTR protocol
 euctr_data <- results[[1]]
 
-# Create dataframe of any unresolved trials in the EUCTR
-unresolved <- results[[2]]
+# Create dataframe of any additional ids found in the EUCTR protocol/results
+identifiers <- results[[2]]
 
-write_csv(euctr_data, here("data", "2023-07-18_charite-ids.csv"))
+# Create dataframe of any unresolved trials in the EUCTR
+unresolved <- results[[3]]
+
+write_csv(euctr_data, here("data", "2023-07-18_euctr_data.csv"))
+write_csv(identifiers, here("data", "2023-07-18_identifiers.csv"))
