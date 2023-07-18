@@ -24,4 +24,4 @@ euctr_data <- results[[1]]
 # Create dataframe of any unresolved trials in the EUCTR
 unresolved <- results[[2]]
 
-write_csv(results, here("data", "2023-03-27_charite-ids.csv"))
+write_csv(euctr_data, here("data", "2023-07-18_charite-ids.csv"))
