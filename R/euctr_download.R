@@ -1,3 +1,6 @@
+# Example unresolved trial 2012-003546-33
+# Example trial without results 2004-002803-34
+
 euctr_download_url <- function (url, name, retry = 10) {
   
   new_name <- paste0("cache/", name, ".txt")
@@ -92,8 +95,6 @@ euctr_download_results <- function (trn) {
   )
   
   path <- euctr_download_url(url, new_name)
-  
-  # TODO: handle NA
   
   html <- rvest::read_html(path)
   
