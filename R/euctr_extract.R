@@ -1,6 +1,8 @@
+# Some trials have multiple country protocols, so we first split the protocol
+# into country-specific information (instance)
+
 extract_summaries <- function(lines) {
   
-  # Create empty list to store sponsor names
   indices <- c()
   
   number <- 0
@@ -16,6 +18,7 @@ extract_summaries <- function(lines) {
 
 
 # Extract full title
+# TODO: get title by other means if not available in the protocol
 extract_title <- function(lines) {
   
   result <- NA
@@ -281,6 +284,7 @@ extract_all <- function (trn) {
     return(NA)
   }
   
+  # Find the boundaries of each country-specific instance in the protocol
   summaries <- extract_summaries(protocol)
 
   boundaries <- data.frame(
