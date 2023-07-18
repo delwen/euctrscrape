@@ -163,7 +163,6 @@ extract_date <- function(lines) {
 
 
 # Extract identifiers from the protocol
-
 extract_identifiers <- function(lines) {
   
   ctg_identifier <- NA
@@ -286,15 +285,20 @@ extract_all <- function (trn) {
   
   # Find the boundaries of each country-specific instance in the protocol
   summaries <- extract_summaries(protocol)
-
-  boundaries <- data.frame(
+  
+  if (!is.null(summaries)) {
+    boundaries <- data.frame(
       start = summaries,
       end = if (length(summaries) == 1) {
-                  c(length(protocol)) 
-        } else {
-                  append(summaries[2:length(summaries)], length(protocol)) 
-        }
-  )
+        c(length(protocol)) 
+      } else {
+        append(summaries[2:length(summaries)], length(protocol)) 
+      }
+    )
+  } else {
+    print("Misformatted protocol!")
+    return(NA)
+  }
  
   result <- data.frame(
     euctr_id = character(),
