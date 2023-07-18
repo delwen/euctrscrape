@@ -159,6 +159,10 @@ extract_all <- function (trn) {
   
   # Download the protocol
   protocol <- euctr_download_protocol(trn)
+  
+  if (length(protocol) == 1 && is.na(protocol)) {
+    return(NA)
+  }
  
   # Get the title
   full_title <- extract_title(protocol)
@@ -252,9 +256,23 @@ combine_info <- function(trials) {
     provenance = character()
   )
   
+  unresolved <- data.frame(
+    unresolved_id = character()
+  )
+  
   for (trial in trials) {
     
     res <- extract_all(trial)
+    
+    if (length(res) == 1 && is.na(res)) {
+      print(paste0(trial, " could not be resolved!"))
+      
+      unresolved <- unresolved |> 
+        add_row(
+            unresolved_id = trial
+            )
+      next
+      }
     
     res_other <- res[[1]]
     table_other <- rbind(table_other, res_other)
@@ -267,5 +285,5 @@ combine_info <- function(trials) {
                              by = "euctr_id",
                              multiple = "all")
   }
-  return(final_table)
+  return(list(final_table, unresolved))
 }

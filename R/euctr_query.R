@@ -18,4 +18,7 @@ trials <- data %>%
 
 results <- combine_info(trials)
 
+euctr_data <- results[[1]]
+unresolved <- results[[2]]
+
 write_csv(results, here("data", "2023-03-27_charite-ids.csv"))
