@@ -1,5 +1,21 @@
-# Extract full title of the trial
+extract_summaries <- function(lines) {
+  
+  # Create empty list to store sponsor names
+  indices <- c()
+  
+  number <- 0
+  for (line in lines) {
+    number <- number + 1
+    m <- str_match(line, "^Summary$")
+    if (!is.na(m)) {
+      indices <- append(indices, number)
+    }
+  }
+  return(indices)
+}
 
+
+# Extract full title
 extract_title <- function(lines) {
   
   result <- NA
@@ -24,25 +40,126 @@ extract_title <- function(lines) {
 }
 
 
-# Extract registration date(s)
-## TODO: collect registration dates across all country protocols
-
-extract_date <- function(lines) {
+# Extract member state concerned
+extract_member_state <- function(lines) {
   
   for (line in lines) {
-    m <- str_match(line,"^Date on which this record was first entered in the EudraCT database: ([0-9]{4}-[0-9]{2}-[0-9]{2})$")
+    m <- str_match(line,"A\\.1 Member State Concerned:(.+)")
     
     if(!is.na(m[2])) {
-      return(m[2])
+      member_state <- str_squish(m[2])
+      return(member_state)
     }
-
+    
   }
   
   return(NA)
 }
 
+
+# Extract trial status
+extract_trial_status <- function(lines) {
+  
+  for (line in lines) {
+    m <- str_match(line,"P\\. End of Trial Status:(.+)")
+    
+    if(!is.na(m[2])) {
+      trial_status <- str_squish(m[2])
+      return(trial_status)
+    }
+    
+  }
+  
+  return(NA)
+}
+
+
+# Extract sponsor name
+extract_sponsor_name <- function(lines) {
+  
+  for (line in lines) {
+    m <- str_match(line,"B\\.1\\.1 Name of Sponsor:(.+)")
+    
+    if(!is.na(m[2])) {
+      sponsor_name <- str_squish(m[2])
+      return(sponsor_name)
+    }
+    
+  }
+  
+  return(NA)
+}
+
+
+# Extract sponsor status
+extract_sponsor_status <- function(lines) {
+  
+  for (line in lines) {
+    m <- str_match(line,"B\\.3\\.1 and B\\.3\\.2	Status of the sponsor:(.+)")
+    
+    if(!is.na(m[2])) {
+      sponsor_status <- str_squish(m[2])
+      return(sponsor_status)
+    }
+    
+  }
+  
+  return(NA)
+}
+
+
+# Extract sponsor country
+extract_sponsor_country <- function(lines) {
+  
+  for (line in lines) {
+    m <- str_match(line,"B\\.1\\.3\\.4	Country:(.+)")
+    
+    if(!is.na(m[2])) {
+      sponsor_country <- str_squish(m[2])
+      return(sponsor_country)
+    }
+    
+  }
+  
+  return(NA)
+}
+
+
+# Extract funder
+extract_funder <- function(lines) {
+  
+  for (line in lines) {
+    m <- str_match(line,"B\\.4\\.1 Name of organisation providing support:(.+)")
+    
+    if(!is.na(m[2])) {
+      funder <- str_squish(m[2])
+      return(funder)
+    }
+    
+  }
+  
+  return(NA)
+}
+
+
+# Extract registration date
+extract_date <- function(lines) {
+
+  for (line in lines) {
+    m <- str_match(line,"^Date on which this record was first entered in the EudraCT database: ([0-9]{4}-[0-9]{2}-[0-9]{2})$")
+
+    if(!is.na(m[2])) {
+      reg_date <- str_squish(m[2])
+      return(reg_date)
+    }
+
+  }
+
+  return(NA)
+}
+
+
 # Extract identifiers from the protocol
-## TODO: collect identifiers across all country protocols
 
 extract_identifiers <- function(lines) {
   
@@ -163,24 +280,74 @@ extract_all <- function (trn) {
   if (length(protocol) == 1 && is.na(protocol)) {
     return(NA)
   }
+  
+  summaries <- extract_summaries(protocol)
+
+  boundaries <- data.frame(
+      start = summaries,
+      end = if (length(summaries) == 1) {
+                  c(length(protocol)) 
+        } else {
+                  append(summaries[2:length(summaries)], length(protocol)) 
+        }
+  )
  
-  # Get the title
-  full_title <- extract_title(protocol)
-  
-  # Get the registration date
-  date <- extract_date(protocol)
-  
-  # Store in results dataframe
   result <- data.frame(
     euctr_id = character(),
     title = character(),
+    member_state = character(),
+    trial_status = character(),
+    sponsor_name = character(),
+    sponsor_status = character(),
+    sponsor_country = character(),
+    funder = character(),
     reg_date = character()
-  ) %>%
-    add_row(
-      euctr_id = trn,
-      title = full_title,
-      reg_date = date
-    )
+  )
+  
+  for (row in 1:nrow(boundaries)) { 
+    start <- boundaries[row, "start"]
+    end <- boundaries[row, "end"]
+    
+    instance <- protocol[start:end]
+
+    # Get the title
+    full_title <- extract_title(instance)
+    
+    # Get the member state
+    member_state <- extract_member_state(instance)
+    
+    # Get the trial status
+    trial_status <- extract_trial_status(instance)
+    
+    # Get the sponsor name
+    sponsor_name <- extract_sponsor_name(instance)
+    
+    # Get the sponsor status
+    sponsor_status <- extract_sponsor_status(instance)
+    
+    # Get the sponsor country
+    sponsor_country <- extract_sponsor_country(instance)
+    
+    # Get the funder
+    funder <- extract_funder(instance)
+    
+    # Get the registration date
+    date <- extract_date(instance)
+    
+    # Store in results dataframe
+    result <- result %>%
+      add_row(
+        euctr_id = trn,
+        title = full_title,
+        member_state = member_state,
+        trial_status = trial_status,
+        sponsor_name = sponsor_name,
+        sponsor_status = sponsor_status,
+        sponsor_country = sponsor_country,
+        funder = funder,
+        reg_date = date
+      )
+  }
   
   # Get any additional identifiers
   ids <- extract_identifiers(protocol)
@@ -237,6 +404,12 @@ combine_info <- function(trials) {
   table_other <- data.frame(
     euctr_id = character(),
     title = character(),
+    member_state = character(),
+    trial_status = character(),
+    sponsor_name = character(),
+    sponsor_status = character(),
+    sponsor_country = character(),
+    funder = character(),
     reg_date = character()
   )
   
@@ -250,6 +423,12 @@ combine_info <- function(trials) {
   final_table <- data.frame(
     euctr_id = character(),
     title = character(),
+    member_state = character(),
+    trial_status = character(),
+    sponsor_name = character(),
+    sponsor_status = character(),
+    sponsor_country = character(),
+    funder = character(),
     reg_date = character(),
     other_id = character(),
     field = character(),
