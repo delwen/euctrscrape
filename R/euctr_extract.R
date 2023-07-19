@@ -481,16 +481,16 @@ extract_all <- function (trn) {
     sponsor_status = character(),
     sponsor_country = character(),
     funder = character(),
-    reg_date = character()
+    reg_date = character(),
+    row = integer()
     )
   
   found_ids <- data.frame(
     euctr_id = character(),
-    isrctn_id = character(),
-    ctgov_id = character(),
-    who_id = character(),
-    other_id = character(),
-    provenance = character()
+    id_name = character(),
+    id_value = character(),
+    provenance = character(),
+    row = integer()
   )
   
   for (row in 1:nrow(boundaries)) { 
@@ -534,48 +534,51 @@ extract_all <- function (trn) {
         sponsor_status = sponsor_status,
         sponsor_country = sponsor_country,
         funder = funder,
-        reg_date = date
+        reg_date = date,
+        row = row
       )
     
-    # Get any additional identifiers from the protocol instance
-    isrctn_id <- extract_isrctn_id(instance)
-    ctgov_id <- extract_ctgov_id(instance)
-    who_id <- extract_who_id(instance)
-    other_id <- extract_other_id(instance)
+    extractors <- c("isrctn" = extract_isrctn_id, 
+                    "ctgov" = extract_ctgov_id, 
+                    "who" = extract_who_id, 
+                    "other" = extract_other_id)
     
-    if (any(!is.na(c(isrctn_id, ctgov_id, who_id, other_id)))) {
-      found_ids <- found_ids %>%
-        add_row(euctr_id = trn,
-                isrctn_id = isrctn_id,
-                ctgov_id = ctgov_id,
-                who_id = who_id,
-                other_id = other_id,
-                provenance = paste0("protocol-", row))
-      }
+    for (identifier in names(extractors)) {
+        extractor <- extractors[[identifier]] # extract_..._id
+        value <- extractor(instance)
+        
+        if (!is.na(value)) {
+          found_ids <- found_ids %>%
+            add_row(euctr_id = trn,
+                    id_name = identifier,
+                    id_value = value,
+                    provenance = "protocol",
+                    row = row)
+        }
     }
+  }
   
   # Download the Results page (if any)
   results_data <- euctr_download_results(trn)
   
-  # Get the CT.gov identifier from the results
-  ctgov <- extract_ctgov(results_data)
+  extractors <- c("isrctn" = extract_isrctn, 
+                  "ctgov" = extract_ctgov, 
+                  "who" = extract_who, 
+                  "other" = extract_other)
   
-  # Get the ISRCTN identifier from the results
-  isrctn <- extract_isrctn(results_data)
-  
-  # Get the WHO identifier from the results
-  who <- extract_who(results_data)
-  
-  # Get other identifier from the results
-  other <- extract_other(results_data)
-  
-  found_ids <- found_ids %>%
-    add_row(euctr_id = trn,
-            isrctn_id = isrctn,
-            ctgov_id = ctgov,
-            who_id = who,
-            other_id = other,
-            provenance = "results")
+  for (identifier in names(extractors)) {
+    extractor <- extractors[[identifier]] # extract_..._id
+    value <- extractor(results_data)
+    
+    if (!is.na(value)) {
+      found_ids <- found_ids %>%
+        add_row(euctr_id = trn,
+                id_name = identifier,
+                id_value = value,
+                provenance = "results",
+                row = row)
+    }
+  }
   
   return(list(result, found_ids))
 }
@@ -584,7 +587,7 @@ extract_all <- function (trn) {
 # Gets all info for n EUCTR trials
 combine_info <- function(trials) {
   
-  table_other <- data.frame(
+  table_euctr_data <- data.frame(
     euctr_id = character(),
     title = character(),
     member_state = character(),
@@ -593,30 +596,17 @@ combine_info <- function(trials) {
     sponsor_status = character(),
     sponsor_country = character(),
     funder = character(),
-    reg_date = character()
+    reg_date = character(),
+    row = integer()
   )
   
   table_identifiers <- data.frame(
     euctr_id = character(),
-    ctgov_id = character(),
-    other_id = character(),
-    provenance = character()
+    id_name = character(),
+    id_value = character(),
+    provenance = character(),
+    row = integer()
   )
-  
-  # final_table <- data.frame(
-  #   euctr_id = character(),
-  #   title = character(),
-  #   member_state = character(),
-  #   trial_status = character(),
-  #   sponsor_name = character(),
-  #   sponsor_status = character(),
-  #   sponsor_country = character(),
-  #   funder = character(),
-  #   reg_date = character(),
-  #   other_id = character(),
-  #   field = character(),
-  #   provenance = character()
-  # )
   
   unresolved <- data.frame(
     unresolved_id = character()
@@ -636,16 +626,12 @@ combine_info <- function(trials) {
       next
       }
     
-    res_other <- res[[1]]
-    table_other <- rbind(table_other, res_other)
+    res_euctr_data <- res[[1]]
+    table_euctr_data <- rbind(table_euctr_data, res_euctr_data)
     
     res_identifiers <- res[[2]]
     table_identifiers <- rbind(table_identifiers, res_identifiers)
     
-    # final_table <- full_join(table_other,
-    #                          table_identifiers,
-    #                          by = "euctr_id",
-    #                          multiple = "all")
   }
-  return(list(table_other, table_identifiers, unresolved))
+  return(list(table_euctr_data, table_identifiers, unresolved))
 }
