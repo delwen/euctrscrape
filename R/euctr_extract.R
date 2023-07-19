@@ -162,42 +162,140 @@ extract_date <- function(lines) {
 }
 
 
-# Extract identifiers from the protocol
-extract_identifiers <- function(lines) {
-  
-  ctg_identifier <- NA
-  other_identifier <- NA
-  
-  # Search for a CT.gov identifier
+# # NEW Extract ISRCTN identifiers
+# extract_isrctn_ids <- function(lines) {
+#   
+#   isrctn_ids <- c()
+#   
+#   for (line in lines) {
+#     m <- str_match(line,"A\\.5\\.1 ISRCTN \\(International Standard Randomised Controlled Trial\\) number: (.+)")
+#     
+#     if(!is.na(m[2])) {
+#       isrctn_id <- str_squish(m[2])
+#       if (!isrctn_id %in% isrctn_ids) {
+#         isrctn_ids <- append(isrctn_ids, isrctn_id)
+#       }
+#     }
+#   }
+#   return(isrctn_ids)
+# }
+
+# NEW Extract ISRCTN identifiers
+extract_isrctn_id <- function(lines) {
   
   for (line in lines) {
-    m <- str_match(line, "A\\.5\\.2 US NCT \\(ClinicalTrials\\.gov registry\\) number: (.+)")
-    if (!is.na(m[2])) {
-      
-      if (!is.na(ctg_identifier)) {
-        print("More than one NCT identifier found!")
-        break
-      }
-      
-      ctg_identifier <- m[2]
-    }
-  }
-  
-  # Search further identifiers
-  
-  if (length(lines) > 0 & length(grep("^A.5.4 Other Identifiers:", lines))) {
+    m <- str_match(line,"A\\.5\\.1 ISRCTN \\(International Standard Randomised Controlled Trial\\) number: (.+)")
     
-    index <- which(lines == "A.5.4 Other Identifiers:")
-    if (length(index) > 1) {
-      print("More than one other identifier found!")
-      index <- index[1]
+    if(!is.na(m[2])) {
+      isrctn_id <- str_squish(m[2])
+      return(isrctn_id)
     }
-    other_identifier <- lines[index + 1]
   }
-  
-  
-  return(c(ctg_identifier, other_identifier))
+  return(NA)
 }
+
+
+# NEW Extract CT.gov identifiers
+extract_ctgov_id <- function(lines) {
+
+  for (line in lines) {
+    m <- str_match(line,"A\\.5\\.2 US NCT \\(ClinicalTrials\\.gov registry\\) number: (.+)")
+
+    if(!is.na(m[2])) {
+      ctgov_id <- str_squish(m[2])
+      return(ctgov_id)
+    }
+  }
+  return(NA)
+}
+
+
+# NEW Extract WHO identifiers
+extract_who_id <- function(lines) {
+  
+  for (line in lines) {
+    m <- str_match(line,"A\\.5\\.3 WHO Universal Trial Reference Number \\(UTRN\\): (.+)")
+    
+    if(!is.na(m[2])) {
+      who_id <- str_squish(m[2])
+      return(who_id)
+    }
+  }
+  return(NA)
+}
+
+
+# # NEW Extract other identifiers
+# # Difficult case: 2017-002124-24
+# extract_other_ids <- function(lines) {
+#   
+#   other_ids <- c()
+#   
+#   index <- which(lines == "A.5.4 Other Identifiers:")
+#   
+#   if (length(index) > 0) {
+#     for (i in 1:length(index)) {
+#       other_id <- lines[index[i] + 1]
+#       if (!other_id %in% other_ids) {
+#         other_ids <- append(other_ids, other_id)
+#       }
+#     }
+#   }
+#   return(other_ids)
+# }
+
+# NEW Extract other identifiers
+# Difficult case: 2017-002124-24
+extract_other_id <- function(lines) {
+  
+  index <- which(lines == "A.5.4 Other Identifiers:")
+  
+  if (length(index) > 0) {
+    for (i in 1:length(index)) {
+      other_id <- lines[index[i] + 1]
+      return(other_id)
+    }
+  }
+  return(NA)
+}
+  
+
+# Extract identifiers from the protocol
+# extract_identifiers <- function(lines) {
+#   
+#   ctg_identifier <- NA
+#   other_identifier <- NA
+#   
+#   # Search for a CT.gov identifier
+#   
+#   for (line in lines) {
+#     m <- str_match(line, "A\\.5\\.2 US NCT \\(ClinicalTrials\\.gov registry\\) number: (.+)")
+#     if (!is.na(m[2])) {
+#       
+#       if (!is.na(ctg_identifier)) {
+#         print("More than one NCT identifier found!")
+#         break
+#       }
+#       
+#       ctg_identifier <- m[2]
+#     }
+#   }
+#   
+#   # Search further identifiers
+#   
+#   if (length(lines) > 0 & length(grep("^A.5.4 Other Identifiers:", lines))) {
+#     
+#     index <- which(lines == "A.5.4 Other Identifiers:")
+#     if (length(index) > 1) {
+#       print("More than one other identifier found!")
+#       index <- index[1]
+#     }
+#     other_identifier <- lines[index + 1]
+#   }
+#   
+#   
+#   return(c(ctg_identifier, other_identifier))
+# }
 
 # Extract CT.gov identifier from the Results page (if any)
 
@@ -274,6 +372,80 @@ extract_isrctn <- function(resulttablerows) {
 }
 
 
+# Extract WHO identifier from the Results page (if any)
+
+extract_who <- function(resulttablerows) {
+  who_id <- NA
+  
+  for (resrow in resulttablerows) {
+    
+    resrow <- gsub("[\n\r]", "", resrow)
+    
+    resrow <- resrow %>%
+      stringr::str_extract(
+        "^WHO universal trial number \\(UTN\\)(.*)+"
+      )
+    
+    if (! is.na(resrow)) {
+      who_id <- sub(
+        "^WHO universal trial number \\(UTN\\)(.*)",
+        "\\1",
+        resrow
+      ) %>%
+        trimws() %>%
+        trimws(whitespace = "[ -]") %>%
+        as.character()
+      
+      if (who_id == "") {
+        who_id <- NA
+      }
+      
+    }
+    if (!is.na(who_id)) {
+      break  
+    }
+  }
+  return(who_id)
+}
+
+
+# Extract other identifier from the Results page (if any)
+
+extract_other <- function(resulttablerows) {
+  other_id <- NA
+  
+  for (resrow in resulttablerows) {
+    
+    resrow <- gsub("[\n\r]", "", resrow)
+    
+    resrow <- resrow %>%
+      stringr::str_extract(
+        "^Other trial identifiers(.*)+"
+      )
+    
+    if (! is.na(resrow)) {
+      other_id <- sub(
+        "^Other trial identifiers(.*)",
+        "\\1",
+        resrow
+      ) %>%
+        trimws() %>%
+        trimws(whitespace = "[ -]") %>%
+        as.character()
+      
+      if (other_id == "") {
+        other_id <- NA
+      }
+      
+    }
+    if (!is.na(other_id)) {
+      break  
+    }
+  }
+  return(other_id)
+}
+
+
 extract_all <- function (trn) {
   
   # Download the protocol
@@ -310,6 +482,15 @@ extract_all <- function (trn) {
     sponsor_country = character(),
     funder = character(),
     reg_date = character()
+    )
+  
+  found_ids <- data.frame(
+    euctr_id = character(),
+    isrctn_id = character(),
+    ctgov_id = character(),
+    who_id = character(),
+    other_id = character(),
+    provenance = character()
   )
   
   for (row in 1:nrow(boundaries)) { 
@@ -355,51 +536,45 @@ extract_all <- function (trn) {
         funder = funder,
         reg_date = date
       )
-  }
-  
-  # Get any additional identifiers
-  ids <- extract_identifiers(protocol)
-  
-  # Store in separate dataframe
-  found_ids <- data.frame(
-    euctr_id = character(),
-    other_id = character(),
-    field = character(),
-    provenance = character()
-  )
-  
-  found_ids <- found_ids %>%
-    add_row(euctr_id = trn,
-            other_id = ids[1],
-            field="US NCT number",
-            provenance = "protocol") %>%
-    add_row(euctr_id = trn,
-            other_id = ids[2],
-            field = "other",
-            provenance = "protocol")
-  
+    
+    # Get any additional identifiers from the protocol instance
+    isrctn_id <- extract_isrctn_id(instance)
+    ctgov_id <- extract_ctgov_id(instance)
+    who_id <- extract_who_id(instance)
+    other_id <- extract_other_id(instance)
+    
+    if (any(!is.na(c(isrctn_id, ctgov_id, who_id, other_id)))) {
+      found_ids <- found_ids %>%
+        add_row(euctr_id = trn,
+                isrctn_id = isrctn_id,
+                ctgov_id = ctgov_id,
+                who_id = who_id,
+                other_id = other_id,
+                provenance = paste0("protocol-", row))
+      }
+    }
   
   # Download the Results page (if any)
   results_data <- euctr_download_results(trn)
   
-  # Get the CT.gov identifier
+  # Get the CT.gov identifier from the results
   ctgov <- extract_ctgov(results_data)
   
-  # if (!is.na(ctgov))
-  found_ids <- found_ids %>%
-    add_row(euctr_id = trn,
-            other_id = ctgov,
-            field = "US NCT number",
-            provenance = "results")
-  
-  # Get the ISRCTN identifier
+  # Get the ISRCTN identifier from the results
   isrctn <- extract_isrctn(results_data)
   
-  #if (!is.na(isrctn))
+  # Get the WHO identifier from the results
+  who <- extract_who(results_data)
+  
+  # Get other identifier from the results
+  other <- extract_other(results_data)
+  
   found_ids <- found_ids %>%
     add_row(euctr_id = trn,
-            other_id = isrctn,
-            field = "ISRCTN number",
+            isrctn_id = isrctn,
+            ctgov_id = ctgov,
+            who_id = who,
+            other_id = other,
             provenance = "results")
   
   return(list(result, found_ids))
@@ -423,8 +598,8 @@ combine_info <- function(trials) {
   
   table_identifiers <- data.frame(
     euctr_id = character(),
+    ctgov_id = character(),
     other_id = character(),
-    field = character(),
     provenance = character()
   )
   
