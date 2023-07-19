@@ -36,8 +36,13 @@ euctr_download_url <- function (url, name, retry = 10) {
     }
     
     if (!found) {
+      file.create(new_name)
       return(NA)
     }
+  }
+  
+  if (file.size(new_name) == 0) {
+    return(NA)
   }
   
   return(new_name)
