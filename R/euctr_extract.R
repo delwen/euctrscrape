@@ -540,7 +540,7 @@ extract_all <- function (trn) {
     
     extractors <- c("isrctn" = extract_isrctn_id, 
                     "ctgov" = extract_ctgov_id, 
-                    "who" = extract_who_id, 
+                    "who_utrn" = extract_who_id, 
                     "other" = extract_other_id)
     
     for (identifier in names(extractors)) {
@@ -563,7 +563,7 @@ extract_all <- function (trn) {
   
   extractors <- c("isrctn" = extract_isrctn, 
                   "ctgov" = extract_ctgov, 
-                  "who" = extract_who, 
+                  "who_utrn" = extract_who, 
                   "other" = extract_other)
   
   for (identifier in names(extractors)) {
