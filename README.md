@@ -7,48 +7,33 @@ Get `euctrscrape` from Github:
 ```
 install.packages("devtools")
 library(devtools)
-install_github("bgcarlisle/euctrscrape")
+install_github("delwen/euctrscrape")
 library(euctrscrape)
 ```
 
-Download registration dates for a EUCTR record:
+`euctrscrape` downloads information for a given trial from the EUCTR.
 
-```
-> euctr_reg_dates("2004-000083-27")
-[1] "2004-07-27" "2004-09-16" "2004-09-23" "2004-10-19" "2005-02-11"
-```
+It takes a vector of EUCTR trial IDs as input, and returns the following:
 
-Get the earliest registration date:
+#### 1) Information from the protocol for each trial:
+- Full title
+- Member state concerned
+- Trial status
+- Sponsor name
+- Sponsor status
+- Sponsor country
+- Funder
+- Registration date (date first entered on the EudraCT database)
+- Additional identifiers
 
-```
-> dates <- euctr_reg_dates("2004-000083-27")
-> dates[1]
-[1] "2004-07-27"
-```
+If a trial involves >1 country protocol, `euctrscrape` returns all fields
+for each country protocol.
 
-Download the start date for a EUCTR record:
+#### 2) Information from the results page for each trial (if available):
+- Additional identifiers
 
-```
-> euctr_start_date("2004-000083-27")
-[1] "2004-09-19"
-```
+`euctrscrape` returns basic trial information and found identifiers separately.
+The EUCTR ID of any trials that are unresolved are also returned. See examples
+in the `data` folder.
 
-Get trial results for a EUCTR record:
-
-```
-> euctr_results_posted("2012-001661-32") ## This trial has results
-$trial_results
-[1] TRUE
-
-$pub_date
-[1] "2021-12-13"
-```
-
-```
-> euctr_results_posted("2020-005087-66") ## This trial has no results
-$trial_results
-[1] FALSE
-
-$pub_date
-[1] NA
-```
+See `euctr_query.R` for an example of how to use `euctrscrape`.

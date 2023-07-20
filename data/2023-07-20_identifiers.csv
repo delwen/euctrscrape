@@ -1,0 +1,78 @@
+euctr_id,id_name,id_value,provenance,row
+2017-001604-30,ctgov,NCT03444103,results,2
+2016-003828-23,ctgov,NCT03046381,results,1
+2016-001777-33,ctgov,NCT02758964,results,1
+2016-000615-33,ctgov,NCT02758782,protocol,1
+2016-000615-33,ctgov,NCT02758782,results,1
+2015-005346-58,ctgov,NCT04114188,results,3
+2015-000538-31,ctgov,NCT02967302,results,1
+2015-000538-31,other,DRKS: DRKS00011113,results,1
+2014-005239-15,ctgov,NCT03062150,results,1
+2014-002392-28,ctgov,NCT02507492,results,1
+2013-000823-15,ctgov,NCT02096068,results,1
+2012-003882-17,ctgov,NCT02071615,results,1
+2012-000188-25,ctgov,NCT02022592,protocol,1
+2012-000188-25,ctgov,NCT02022592,results,1
+2011-004463-69,other,DRKS 00003246,protocol,1
+2011-001689-16,isrctn,ISRCTN46445413,protocol,1
+2011-001689-16,who_utrn,U1111-1121-1623,protocol,1
+2011-001689-16,other,German Register of Clinical Trials DRKS00000796,protocol,1
+2011-001689-16,isrctn,ISRCTN46445413,results,1
+2011-001689-16,who_utrn,U1111-1121-1623,results,1
+2011-001689-16,other,German Register of Clinical Trials: DRKS00000796,results,1
+2011-001403-12,ctgov,NCT01370044,results,1
+2011-001398-19,ctgov,NCT01928823,results,1
+2011-001027-20,ctgov,NCT02204293,results,1
+2011-000844-56,ctgov,NCT01330901,protocol,1
+2010-024379-15,ctgov,NCT01503372,results,1
+2010-023941-31,ctgov,NCT01357681,results,1
+2010-021861-62,ctgov,NCT01266655,results,1
+2010-021775-80,ctgov,NCT01466465,results,1
+2010-021275-92,isrctn,Not available,protocol,1
+2010-018291-25,ctgov,NCT01319370,protocol,1
+2009-013976-38,ctgov,NCT01693393,results,1
+2009-011922-33,ctgov,NCT01047891,results,1
+2008-008474-31,isrctn,ISRCTN12345678,protocol,1
+2008-008474-31,isrctn,ISRCTN12345678,results,1
+2008-008474-31,ctgov,NCT02094287,results,1
+2008-007237-47,isrctn,ISRCTN18978802,protocol,1
+2008-006135-12,isrctn,53154834,protocol,1
+2008-005213-22,ctgov,NCT00799890,results,1
+2007-004674-49,isrctn,85175364,protocol,1
+2007-004401-10,other,clinical trials NCT 00670254,protocol,1
+2007-004401-10,ctgov,NCT00670254,results,1
+2007-004401-10,other,clinical trials: NCT 00670254,results,1
+2007-003111-31,isrctn,ISRCTN27114642,protocol,1
+2007-003111-31,other,ARTVI ARTVI,protocol,1
+2006-006088-22,ctgov,NCT02158988,results,1
+2006-004628-34,isrctn,entfällt,protocol,2
+2006-003146-41,isrctn,36745608,protocol,1
+2005-003617-33,isrctn,NA,protocol,1
+2005-002475-32,isrctn,01680675,protocol,1
+2005-002320-34,ctgov,NCT00844142,results,1
+2004-003816-47,isrctn,not available,protocol,1
+2020-006144-18,other,AIO Number AIO-KRK-0419,protocol,1
+2017-002124-24,ctgov,NCT03083431,protocol,1
+2017-002124-24,other,other Study ID No 01GM1703,protocol,1
+2017-000058-21,ctgov,NCT03463317,protocol,1
+2017-000058-21,who_utrn,U1111-1194-4541,protocol,1
+2013-001599-40,other,DRKS DRKS00004858,protocol,1
+2013-001599-40,other,DRKS: DRKS00004858,results,1
+2013-001294-24,ctgov,NCT02371434,results,1
+2012-000793-30,ctgov,NCT01802814,protocol,3
+2009-011277-33,ctgov,NCT00942747,results,1
+2004-002646-35,ctgov,NCT00568542,results,1
+2014-002643-18,ctgov,NCT02453867,protocol,1
+2014-002643-18,other,Centre for Evidence in Transplantation Approval CET010,protocol,1
+2014-002643-18,ctgov,NCT02453867,protocol,2
+2014-002643-18,other,Centre for Evidence in Transplantation Approval CET010,protocol,2
+2014-002643-18,ctgov,NCT02453867,protocol,3
+2014-002643-18,other,Centre for Evidence in Transplantation Approval CET010,protocol,3
+2014-002643-18,ctgov,NCT02453867,protocol,4
+2014-002643-18,other,Centre for Evidence in Transplantation Approval CET010,protocol,4
+2014-002643-18,ctgov,NCT02453867,protocol,5
+2014-002643-18,other,Centre for Evidence in Transplantation Approval CET010,protocol,5
+2014-001325-33,ctgov,NCT02540395,results,4
+2007-007034-18,isrctn,DCC,protocol,1
+2006-005778-34,ctgov,NCT00772655,results,3
+2004-002420-18,isrctn,not available,protocol,1
