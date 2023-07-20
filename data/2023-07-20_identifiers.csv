@@ -15,10 +15,10 @@ euctr_id,id_name,id_value,provenance,row
 2012-000188-25,ctgov,NCT02022592,results,1
 2011-004463-69,other,DRKS 00003246,protocol,1
 2011-001689-16,isrctn,ISRCTN46445413,protocol,1
-2011-001689-16,who,U1111-1121-1623,protocol,1
+2011-001689-16,who_utrn,U1111-1121-1623,protocol,1
 2011-001689-16,other,German Register of Clinical Trials DRKS00000796,protocol,1
 2011-001689-16,isrctn,ISRCTN46445413,results,1
-2011-001689-16,who,U1111-1121-1623,results,1
+2011-001689-16,who_utrn,U1111-1121-1623,results,1
 2011-001689-16,other,German Register of Clinical Trials: DRKS00000796,results,1
 2011-001403-12,ctgov,NCT01370044,results,1
 2011-001398-19,ctgov,NCT01928823,results,1
@@ -55,7 +55,7 @@ euctr_id,id_name,id_value,provenance,row
 2017-002124-24,ctgov,NCT03083431,protocol,1
 2017-002124-24,other,other Study ID No 01GM1703,protocol,1
 2017-000058-21,ctgov,NCT03463317,protocol,1
-2017-000058-21,who,U1111-1194-4541,protocol,1
+2017-000058-21,who_utrn,U1111-1194-4541,protocol,1
 2013-001599-40,other,DRKS DRKS00004858,protocol,1
 2013-001599-40,other,DRKS: DRKS00004858,results,1
 2013-001294-24,ctgov,NCT02371434,results,1
