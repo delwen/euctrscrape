@@ -162,25 +162,7 @@ extract_date <- function(lines) {
 }
 
 
-# # NEW Extract ISRCTN identifiers
-# extract_isrctn_ids <- function(lines) {
-#   
-#   isrctn_ids <- c()
-#   
-#   for (line in lines) {
-#     m <- str_match(line,"A\\.5\\.1 ISRCTN \\(International Standard Randomised Controlled Trial\\) number: (.+)")
-#     
-#     if(!is.na(m[2])) {
-#       isrctn_id <- str_squish(m[2])
-#       if (!isrctn_id %in% isrctn_ids) {
-#         isrctn_ids <- append(isrctn_ids, isrctn_id)
-#       }
-#     }
-#   }
-#   return(isrctn_ids)
-# }
-
-# NEW Extract ISRCTN identifiers
+# Extract ISRCTN identifier
 extract_isrctn_id <- function(lines) {
   
   for (line in lines) {
@@ -195,7 +177,7 @@ extract_isrctn_id <- function(lines) {
 }
 
 
-# NEW Extract CT.gov identifiers
+# Extract CT.gov identifier
 extract_ctgov_id <- function(lines) {
 
   for (line in lines) {
@@ -210,7 +192,7 @@ extract_ctgov_id <- function(lines) {
 }
 
 
-# NEW Extract WHO identifiers
+# Extract WHO (UTRN) identifier
 extract_who_id <- function(lines) {
   
   for (line in lines) {
@@ -225,27 +207,8 @@ extract_who_id <- function(lines) {
 }
 
 
-# # NEW Extract other identifiers
-# # Difficult case: 2017-002124-24
-# extract_other_ids <- function(lines) {
-#   
-#   other_ids <- c()
-#   
-#   index <- which(lines == "A.5.4 Other Identifiers:")
-#   
-#   if (length(index) > 0) {
-#     for (i in 1:length(index)) {
-#       other_id <- lines[index[i] + 1]
-#       if (!other_id %in% other_ids) {
-#         other_ids <- append(other_ids, other_id)
-#       }
-#     }
-#   }
-#   return(other_ids)
-# }
-
-# NEW Extract other identifiers
-# Difficult case: 2017-002124-24
+# Extract other identifier
+# TODO: handle difficult case 2017-002124-24
 extract_other_id <- function(lines) {
   
   index <- which(lines == "A.5.4 Other Identifiers:")
@@ -259,43 +222,6 @@ extract_other_id <- function(lines) {
   return(NA)
 }
   
-
-# Extract identifiers from the protocol
-# extract_identifiers <- function(lines) {
-#   
-#   ctg_identifier <- NA
-#   other_identifier <- NA
-#   
-#   # Search for a CT.gov identifier
-#   
-#   for (line in lines) {
-#     m <- str_match(line, "A\\.5\\.2 US NCT \\(ClinicalTrials\\.gov registry\\) number: (.+)")
-#     if (!is.na(m[2])) {
-#       
-#       if (!is.na(ctg_identifier)) {
-#         print("More than one NCT identifier found!")
-#         break
-#       }
-#       
-#       ctg_identifier <- m[2]
-#     }
-#   }
-#   
-#   # Search further identifiers
-#   
-#   if (length(lines) > 0 & length(grep("^A.5.4 Other Identifiers:", lines))) {
-#     
-#     index <- which(lines == "A.5.4 Other Identifiers:")
-#     if (length(index) > 1) {
-#       print("More than one other identifier found!")
-#       index <- index[1]
-#     }
-#     other_identifier <- lines[index + 1]
-#   }
-#   
-#   
-#   return(c(ctg_identifier, other_identifier))
-# }
 
 # Extract CT.gov identifier from the Results page (if any)
 
